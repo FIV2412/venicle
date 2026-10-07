@@ -13,28 +13,42 @@ class Vehicle:
     """
     Базовый класс для транспортных средств.
     """
-    def __init__(self):
-        pass
+    def __init__(self, name, fuel_tank_capacity):
+        
+        """Инициализирует транспортное средство с заданным названием и вместимостью бака."""
+        self._name = name
+        self._fuel_tank_capacity = fuel_tank_capacity
+        self._current_fuel_level = fuel_tank_capacity
 
-    def refuel(self):
+    def refuel(self, amount):
         """
         Заправка транспортного средства.
         """
-        pass
+        if amount <= 0:
+            print("Ошибка: количество топлива должно быть положительным.")
+            return         # что сюда?    
+        if self._current_fuel_level + amount > self._fuel_tank_capacity:
+            print("Ошибка: превышение вместимости топливного бака.")
+            return
 
+        self._current_fuel_level += amount
+            print(f"Заправлено {amount} л. Текущий уровень: {self._current_fuel_level} л.")    
+            
     def display_info(self):
         """
         Отображает основную информацию о транспортном средстве.
         """
-        pass
+        print(f"Название: {self._name}, Вместимость бака: {self._fuel_tank_capacity} л, Текущий уровень топлива: {self._current_fuel_level} л.")
 
 
-class Car:
+class Car(Vehicle):
     """
     Класс для представления автомобиля.
-    Наследует от Vehicle.
-    """
-    pass
+    Наследует от Vehicle."""
+    def __init__(self, name, fuel_tank_capacity, fuel_consumption_per_100km):
+        """Инициализирует автомобиль."""""
+        super().__init__(name, fuel_tank_capacity)
+        self._fuel_consumption_per_100km = fuel_consumption_per_100km
 
 
 class Airplane:
