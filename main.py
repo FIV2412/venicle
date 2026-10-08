@@ -1,21 +1,24 @@
 def validate_fuel_consumption(method):
-    """
-    Декоратор для проверки условий перед расчётом расхода топлива.
-    Проверяет, что время или расстояние неотрицательны и достаточно топлива.
-    """
-    def calculate_fuel_consumption(self, distance):
-
-        result = (distance / 100)*self._fuel_consumption_per_100km
-        print(f"Расход на {distance} км: {round(result,2)} л.")
-
-        return result
-        
+    """Декоратор для проверки условий перед расчётом расхода топлива."""
     def wrapper(self, value):
-        # вызов метода: method(self, value)
-        pass
+        if value < 0:
+            print("Ошибка: значение не может быть отрицательным.")
+            return None
+
+        result = method(self, value)
+        if result is None:
+            return None
+
+        if result > self._current_fuel_level:
+            print(f"Ошибка: недостаточно топлива для поездки. Нужно {result} л, в наличии {self._current_fuel_level} л.")
+            return None
+
+        self._current_fuel_level -= result
+        return result
+
     return wrapper
 
-
+    
 class Vehicle:
     """
     Базовый класс для транспортных средств.
@@ -39,7 +42,7 @@ class Vehicle:
             return
 
         self._current_fuel_level += amount
-            print(f"Заправлено {amount} л. Текущий уровень: {self._current_fuel_level} л.")    
+        print(f"Заправлено {amount} л. Текущий уровень: {self._current_fuel_level} л.")    
             
     def display_info(self):
         """
@@ -56,7 +59,13 @@ class Car(Vehicle):
         """Инициализирует автомобиль."""
         super().__init__(name, fuel_tank_capacity)
         self._fuel_consumption_per_100km = fuel_consumption_per_100km
-
+    @validate_fuel_consumption    
+    def calculate_fuel_consumption(self, distance):
+    
+            result = (distance / 100)*self._fuel_consumption_per_100km
+            print(f"Расход на {distance} км: {round(result,2)} л.")
+    
+            return result
 
 class Airplane(Vehicle):
     """
@@ -64,17 +73,34 @@ class Airplane(Vehicle):
     Наследует от Vehicle.
     """
     def __init__(self, name, fuel_tank_capacity, fuel_consumption_per_hour):
-            """Инициализирует автомобиль."""
+            """Инициализирует самолет."""
             super().__init__(name, fuel_tank_capacity)
             self._fuel_consumption_per_hour = fuel_consumption_per_hour
+    @validate_fuel_consumption
+    def calculate_fuel_consumption(self, flight_time):
+    
+            result = flight_time * self._fuel_consumption_per_hour
+            print(f"Расход за {flight_time} ч: {round(result,2)} л.")
+    
+            return result
 
-
-class Boat:
+class Boat(Vehicle):
     """
     Класс для представления катера.
     Наследует от Vehicle.
     """
-    pass
+    def __init__(self, name, fuel_tank_capacity, fuel_consumption_per_hour):
+        """Инициализирует катер."""
+        super().__init__(name, fuel_tank_capacity)
+                
+        self._fuel_consumption_per_hour = fuel_consumption_per_hour
+    @validate_fuel_consumption    
+    def calculate_fuel_consumption(self, travel_time):
+        
+       result = travel_time * self._fuel_consumption_per_hour
+       print(f"Расход за {travel_time} ч: {round(result,2)} л.")
+        
+       return result
 
 
 # Создание объектов
