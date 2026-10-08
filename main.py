@@ -3,6 +3,13 @@ def validate_fuel_consumption(method):
     Декоратор для проверки условий перед расчётом расхода топлива.
     Проверяет, что время или расстояние неотрицательны и достаточно топлива.
     """
+    def calculate_fuel_consumption(self, distance):
+
+        result = (distance / 100)*self._fuel_consumption_per_100km
+        print(f"Расход на {distance} км: {round(result,2)} л.")
+
+        return result
+        
     def wrapper(self, value):
         # вызов метода: method(self, value)
         pass
@@ -46,17 +53,20 @@ class Car(Vehicle):
     Класс для представления автомобиля.
     Наследует от Vehicle."""
     def __init__(self, name, fuel_tank_capacity, fuel_consumption_per_100km):
-        """Инициализирует автомобиль."""""
+        """Инициализирует автомобиль."""
         super().__init__(name, fuel_tank_capacity)
         self._fuel_consumption_per_100km = fuel_consumption_per_100km
 
 
-class Airplane:
+class Airplane(Vehicle):
     """
     Класс для представления самолёта.
     Наследует от Vehicle.
     """
-    pass
+    def __init__(self, name, fuel_tank_capacity, fuel_consumption_per_hour):
+            """Инициализирует автомобиль."""
+            super().__init__(name, fuel_tank_capacity)
+            self._fuel_consumption_per_hour = fuel_consumption_per_hour
 
 
 class Boat:
